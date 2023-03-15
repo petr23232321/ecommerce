@@ -77,7 +77,34 @@
 		<h3>Customer Reviews </h3>
 
 	</header>
-
+    <form action="" method="POST"></form>
+                {% csrf_token %}
+    <h5>Write your review</h5>
+    <div>
+        <lable>How do you rate this product?</lable>
+        <br>
+        <div class="stars">
+  <input type="radio" id="star1" name="rating" value="1" />
+  <label for="star1" title="1 stars"></label>
+  <input type="radio" id="star2" name="rating" value="2" />
+  <label for="star2" title="2 stars"></label>
+  <input type="radio" id="star3" name="rating" value="3" />
+  <label for="star3" title="3 stars"></label>
+  <input type="radio" id="star4" name="rating" value="4" />
+  <label for="star4" title="4 stars"></label>
+  <input type="radio" id="star5" name="rating" value="5" />
+  <label for="star5" title="5 star"></label>
+</div>
+        Review Title
+        <input type="text" class="form-control" name="subject" >
+        <br>
+        Review:
+        <textarea name="review" cols="10" rows="4" class="form-control" ></textarea>
+        <br>
+        <input type="submit" value="Submit Review" class="btn btn-primary">
+    </div>
+    </form>
+                <br>
 	<article class="box mb-3">
 		<div class="icontext w-100">
 			<img src="./images/avatars/avatar1.jpg" class="img-xs icon rounded-circle">

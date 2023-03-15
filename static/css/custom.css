@@ -1,0 +1,22 @@
+.stars {
+  display: inline-block;
+}
+
+.stars input[type="radio"] {
+  display: none;
+}
+
+.stars label {
+  font-size: 30px;
+  color: #bbb;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.stars label:before {
+  content: "\2605";
+}
+
+.stars input[type="radio"]:checked ~ label {
+  color: #ffd700;
+}

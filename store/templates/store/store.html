@@ -2,8 +2,11 @@
 {% block section %}
     <section class="section-pagetop bg">
     <div class="container">
-	    <h2 class="title-page">Our Store</h2>
-
+        {% if 'search' in request.path %}
+	        <h2 class="title-page">Searching</h2>
+        {% else %}
+            <h2 class="title-page">Our Store</h2>
+        {% endif %}
     </div> <!-- container //  -->
     </section>
 {% endblock %}
@@ -133,6 +136,7 @@
 		</div>
 </header><!-- sect-heading -->
 <div class="row">
+{% if products %}
 {% for product in products %}
     <div class="col-md-4">
         <figure class="card card-product-grid">
@@ -146,11 +150,18 @@
 						    <span class="price">${{ product.price }}</span>
 					    </div> <!-- price-wrap.// -->
 				    </div>
-				    <a href="{% url 'users:login' %}" class="btn btn-block btn-primary">Add to cart </a>
+				{%if user.is_authenticated%}					
+				<a href="{{ product.get_url }}" class="btn btn-block btn-primary">View Details </a>
+				{% else %}
+					<a href="{% url 'users:login' %}" class="btn btn-block btn-primary">View Details </a>
+				{% endif %}
 			    </figcaption>
         </figure>
     </div> <!-- col.// -->
-{% endfor %}
+    {% endfor %}
+{% else %}
+    <h2>Here is nothing</h2>
+{% endif %}
 
 </div> <!-- row end.// -->
 

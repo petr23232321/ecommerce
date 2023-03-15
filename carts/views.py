@@ -1,7 +1,8 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from store.models import Products
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from store.models import Products, Variation
 from carts.models import Cart, CartItem
+
 
 # adding cart
 
@@ -14,6 +15,19 @@ def _cart_id(request):   #_ is private
 
 def add_cart(request, product_id):
     product = Products.objects.get(id=product_id)
+    product_variation = []
+    if request.method == "post":
+        for item in request.POST:
+            key = item
+            value = request.POST[key]
+
+            try:
+                variation = Variation.objects.get(product=product, variation_category__iexact=key, variation_value__iexact=value)
+                product_variation.append(variation)
+            except:
+                pass
+        
+   
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request)) # get the cart using the cart_id present in the session
     except Cart.DoesNotExist:
@@ -23,6 +37,9 @@ def add_cart(request, product_id):
     cart.save()
     try:
         cart_item = CartItem.objects.get(product=product, cart=cart)
+        if len(product_variation)>0:
+            for item in product_variation:
+                cart_item.variations.add(item)
         cart_item.quantity += 1
         cart_item.save()
     except CartItem.DoesNotExist:
@@ -31,9 +48,30 @@ def add_cart(request, product_id):
             quantity=1,
             cart = cart,
         )
+        if len(product_variation)>0:
+            for item in product_variation:
+                cart_item.variations.add(item)
         cart_item.save()
     return redirect('cart:cart')
 
+
+def remove_cart(request, product_id):
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    product = get_object_or_404(Products, id=product_id)
+    cart_item = CartItem.objects.get(product=product, cart=cart)
+    if cart_item.quantity > 1:
+        cart_item.quantity -=1
+        cart_item.save()
+    else:
+        cart_item.delete()
+    return redirect('/cart')
+
+def remove_cart_item(request, product_id):
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    product = get_object_or_404(Products, id=product_id)
+    cart_item = CartItem.objects.get(product=product, cart=cart)
+    cart_item.delete()
+    return redirect('/cart')
 
 
 def cart(request, total=0, quantity=0, cart_items=None ):
@@ -47,6 +85,7 @@ def cart(request, total=0, quantity=0, cart_items=None ):
         grand_total = total + tax
     except ObjectNotExists:
         pass
+    
 
     context = {
         'total': total,

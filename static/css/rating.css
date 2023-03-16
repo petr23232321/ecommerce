@@ -1,0 +1,21 @@
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: left;
+  }
+
+.rating input[type="radio"] {
+    display: none;
+  }
+
+.rating label {
+    color: grey;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+.rating label:hover,
+.rating input[type="radio"]:checked ~ label {
+    color: gold;
+  }

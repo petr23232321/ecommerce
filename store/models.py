@@ -60,3 +60,8 @@ class ReviewRating(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class Orderproduct(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
